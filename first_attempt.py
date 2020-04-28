@@ -68,7 +68,7 @@ mode_name = [
 ]
 modes = {mode_name[i]: rules[i:] + rules[:i] for i in range(7)}
 
-def create_mode(mode, note):
+def create_mode(mode, note, octave=None):
     scale = scales[note]
 
     def _bemol(r):
@@ -86,7 +86,8 @@ def create_mode(mode, note):
             continue
 
     print(modes[mode])
-    return result if mode in ['jonico', 'lidio'] else _bemol(result)
+    actual_mode = result if mode in ['jonico', 'lidio'] else _bemol(result)
+    return actual_mode + [note] if not octave else list(map(lambda x: f'{x}{octave}', actual_mode)) + [f'{note}{octave + 1}']
 
 # %%
 
