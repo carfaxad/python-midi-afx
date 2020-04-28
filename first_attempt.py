@@ -38,88 +38,58 @@ for note in range(40, 80, 1):
 
 # mid.save('new_song.mid')
 
-# # %%
 
-# notes = {
-#     0: 'C',
-#     1: 'D',
-#     2: 'E',
-#     3: 'F',
-#     4: 'G',
-#     5: 'A',
-#     6: 'B',
-# }
+# %%
+import json
+from collections import defaultdict
 
-# notes_rules = {notes[i]: base[i:] + base[:i] for i in range(len(base))}
-# print(notes_rules)
+rules = [1, 1, 0, 1, 1, 1, 0]
+notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
+base_scale_rules = list(zip(rules, notes))
 
-# # %%
-# from collections import defaultdict
-# rules = [1, 1, 0, 1, 1, 1, 0]
-# notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
-# nr = list(zip(rules, notes))
-# print(nr)
+# %%
+scales = defaultdict(list)
+actual_scale_rules = []
+for i, key_note in enumerate(notes):
+    actual_scale_rules = base_scale_rules[i:] + base_scale_rules[:i]
 
-# # %%
-# for i, n, in nr:
-    
+    for rule, note in actual_scale_rules:
+        scales[key_note] += [note, note + '#'] if rule else [note]
 
-# # %%
-# scales_base = {note: base[i:] + base[:i] for i, note in enumerate(notes)}
+# %%
+mode_name = [
+    'jonico',        # major mode/natural major
+    'dorico',
+    'frigio',
+    'lidio',
+    'mixolidio',
+    'eolico',        # minor mode/natural minor
+    'locrio'
+]
+modes = {mode_name[i]: rules[i:] + rules[:i] for i in range(7)}
 
-# scales = defaultdict(list)
-# for note, rules in scales_base.items():
-#     n =
-#     for rule in rules:
-#         scales[note] += [notes[i], notes[i] + '#'] if rule else [notes[i]]
+def create_mode(mode, note):
+    scale = scales[note]
 
-# print(scales)
+    def _bemol(r):
+        return [scale[scale.index(note) + 1] + 'b' if '#' in note else note for note in r]
 
-# # for note, rules in notes_rules.items():
-# #     for i, rule in enumerate(rules):
-# #         scales[note] += [notes[i], notes[i] + '#'] if rule else [notes[i]]
-# # print(scales)
+    result = [scale[0]]
+    position = 0
+    for rule in modes[mode]:
+        try:
+            # print(rule, position)
+            skip = 2 if rule else 1
+            position += skip
+            result.append(scale[position])
+        except:
+            continue
 
-# # %%
-# octave = []
-# for i, note in notes.items():
-#     octave += [note, note + '#'] if base[i] else [note]
-# print(octave)
+    print(modes[mode])
+    return result if mode in ['jonico', 'lidio'] else _bemol(result)
 
-# # %%
+# %%
 
-# scales = {notes[i]: octave[i:] + octave[:i] for i in range(len(notes))}
-# print(scales)
-
-# # %%
-# mode_name = {
-#     0: 'jonico',        # major mode/natural major
-#     1: 'dorico',
-#     2: 'frigio',
-#     3: 'lidio',
-#     4: 'mixolidio',
-#     5: 'eolico',        # minor mode/natural minor
-#     6: 'locrio'
-# }
-# modes_b = {mode_name[i]: base[i:] + base[:i] for i in range(len(base))}
-
-# # %%
-# for
-
-# # %%
-# base_note = '12'  # C0
-# octave = ['C', 'C#', 'R', R]
-# for i in range(base_note, 168, octave):
-
-#     if i % octave_len == 0:
-#         notes.update({current_note: i})
-#     current_octave += 1
-# print(notes)
-
-# # %%
-
-
-# # %%
-
+create_mode('mixolidio', 'G')
 
 # %%
