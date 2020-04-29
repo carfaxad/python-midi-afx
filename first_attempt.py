@@ -38,59 +38,9 @@ for note in range(40, 80, 1):
 
 # mid.save('new_song.mid')
 
-
 # %%
-import json
-from collections import defaultdict
-
-rules = [1, 1, 0, 1, 1, 1, 0]
-notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
-base_scale_rules = list(zip(rules, notes))
-
-# %%
-scales = defaultdict(list)
-actual_scale_rules = []
-for i, key_note in enumerate(notes):
-    actual_scale_rules = base_scale_rules[i:] + base_scale_rules[:i]
-
-    for rule, note in actual_scale_rules:
-        scales[key_note] += [note, note + '#'] if rule else [note]
-
-# %%
-mode_name = [
-    'jonico',        # major mode/natural major
-    'dorico',
-    'frigio',
-    'lidio',
-    'mixolidio',
-    'eolico',        # minor mode/natural minor
-    'locrio'
-]
-modes = {mode_name[i]: rules[i:] + rules[:i] for i in range(7)}
-
-def create_mode(mode, note, octave=None):
-    scale = scales[note]
-
-    def _bemol(r):
-        return [scale[scale.index(note) + 1] + 'b' if '#' in note else note for note in r]
-
-    result = [scale[0]]
-    position = 0
-    for rule in modes[mode]:
-        try:
-            # print(rule, position)
-            skip = 2 if rule else 1
-            position += skip
-            result.append(scale[position])
-        except:
-            continue
-
-    print(modes[mode])
-    actual_mode = result if mode in ['jonico', 'lidio'] else _bemol(result)
-    return actual_mode + [note] if not octave else list(map(lambda x: f'{x}{octave}', actual_mode)) + [f'{note}{octave + 1}']
-
-# %%
-
-create_mode('mixolidio', 'G')
+from scales import ScaleModes
+s = ScaleModes()
+s.create_mode('dorico', 'C')
 
 # %%
