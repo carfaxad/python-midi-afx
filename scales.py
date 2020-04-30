@@ -4,24 +4,38 @@ from collections import defaultdict
 
 class ScaleModes:
 
-    def __init__(self):
-        self.rules = [1, 1, 0, 1, 1, 1, 0]
+    def __init__(self, bemol=False):
+        """ Builds scales and modes
+
+        Parameters:
+        bemol (bool): Default False for scales in `#` way, True for scales in `b` way
+        """
+        self.bemol = bemol
         self.notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
-        self.base_scale_rules = list(zip(self.rules, self.notes))
-        self.scales = self._build_scales()
+        self.rules = [1, 1, 0, 1, 1, 1, 0]
+        self.base_rules = list(zip(self.rules, self.notes))
         self.modes = self._build_modes()
+        self.scales = self._build_scales()
 
     def _build_scales(self):
+        """ Private method: Build natural scales for each note """
         scales = defaultdict(list)
-        actual_scale_rules = []
+        actual = []
         for i, key_note in enumerate(self.notes):
-            actual_scale_rules = self.base_scale_rules[i:] + self.base_scale_rules[:i]
+            actual = self.base_rules[i:] + self.base_rules[:i]
 
-            for rule, note in actual_scale_rules:
-                scales[key_note] += [note, note + '#'] if rule else [note]
+            for rule, note in actual:
+                if self.bemol:
+                    try:
+                        scales[key_note] += [note, actual[actual.index((rule, note)) + 1][1] + 'b'] if rule else [note]
+                    except:
+                        scales[key_note] += [note, actual[0][1] + 'b'] if rule else [note]
+                else:
+                    scales[key_note] += [note, note + '#'] if rule else [note]
         return scales
 
     def _build_modes(self):
+        """ Private method: Create rules for each mode """
         mode_name = [
             'jonico',        # major mode/natural major
             'dorico',
@@ -34,8 +48,18 @@ class ScaleModes:
         return {mode_name[i]: self.rules[i:] + self.rules[:i] for i in range(7)}
 
 
-    # TODO add plus one after B in each scale
     def create_mode(self, mode, note, octave=None):
+        """ Create mode with `b` if scale is minor else with `#`
+
+            Parameters:
+            mode (str):     jonico, dorico, frigio, lidio, mixolidio, eolico, locrio
+            note (str):     C, D, E, F, G, A, B
+            octave (int):   Octave in keyboard way
+
+            Returns:
+            List: octave in specified mode
+
+        """
         scale = self.scales[note]
 
         def _bemol(r):
