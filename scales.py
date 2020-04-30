@@ -5,7 +5,7 @@ from collections import defaultdict
 class ScaleModes:
 
     def __init__(self, bemol=False):
-        """ Builds scales and modes
+        """ Builds scales and scale modes
 
         Parameters:
         bemol (bool): Default False for scales in `#` way, True for scales in `b` way
@@ -52,12 +52,19 @@ class ScaleModes:
         """ Create mode with `b` if scale is minor else with `#`
 
             Parameters:
-            mode (str):     jonico, dorico, frigio, lidio, mixolidio, eolico, locrio
-            note (str):     C, D, E, F, G, A, B
-            octave (int):   Octave in keyboard way
+                mode (str):     jonico, dorico, frigio, lidio, mixolidio, eolico, locrio
+                note (str):     C, D, E, F, G, A, B
+                octave (int):   Octave in keyboard way
 
             Returns:
-            List: octave in specified mode
+                List: octave in specified mode
+
+            Example:
+                ```python
+                sm = ScaleModes(bemol=True)
+                sm.create_mode('dorico', 'C', 3)
+                # returns: ['C3', 'D3', 'Eb3', 'F3', 'G3', 'A3', 'Bb3', 'C4']
+                ```
 
         """
         scale = self.scales[note]

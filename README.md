@@ -1,7 +1,6 @@
 # MIDI
 MIDI tests for music lessons
 
-# Virtual env
 Consider using a virtual env _midi_ and set `settings.json`
 
 # Usage
@@ -12,10 +11,10 @@ Consider using a virtual env _midi_ and set `settings.json`
 ### \_\_init\_\_
 
 ```python
- | __init__(bemol=False)
+__init__(bemol=False)
 ```
 
-Builds scales and modes
+Builds scales and scale modes
 
 **Arguments**:
 
@@ -25,7 +24,7 @@ Builds scales and modes
 ### create\_mode
 
 ```python
- | create_mode(mode, note, octave=None)
+create_mode(mode, note, octave=None)
 ```
 
 Create mode with `b` if scale is minor else with `#`
@@ -40,6 +39,15 @@ Create mode with `b` if scale is minor else with `#`
 **Returns**:
 
 - `List` - octave in specified mode
+
+
+**Examples**:
+
+  ```python
+  sm = ScaleModes(bemol=True)
+  sm.create_mode('dorico', 'C', 3)
+  # returns: ['C3', 'D3', 'Eb3', 'F3', 'G3', 'A3', 'Bb3', 'C4']
+  ```
 
 # Thanks to
 This README.md was partially created with https://github.com/NiklasRosenstein/pydoc-markdown/
