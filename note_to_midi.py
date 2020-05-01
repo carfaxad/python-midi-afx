@@ -1,5 +1,3 @@
-# %%
-
 import rtmidi
 import time
 
@@ -9,17 +7,18 @@ from mido.ports import BaseOutput
 from scales import ScaleModes
 
 
-# TODO add support for bemol
 class NoteToMidi(ScaleModes):
 
     def __init__(self):
         super().__init__()
-        self.mapping = self._build_mapping()
+        self.mapping_sharp = self._build_mapping(self.scales['C'])
 
-    def _build_mapping(self):
+        self.bemol = True
+        self.mapping_bemol = self._build_mapping(self._build_scales()['C'])
+
+    def _build_mapping(self, scale):
         mapping = {}
         octave = -2
-        scale = self.scales['C']
         for i in range(128):
             mod = i % len(scale)
             if mod == 0:
@@ -29,32 +28,32 @@ class NoteToMidi(ScaleModes):
         return mapping
 
 class SoundNotes(NoteToMidi):
-
+    """ Play a list of notes """
     def __init__(self):
         super().__init__()
-        self.m = self.mapping
         self.midiout = rtmidi.MidiOut()
         self.port = open_output(self.midiout.get_ports()[0])
 
-    def close(self):
-        if self.port and not self.port.closed:
-            self.port.close()
-
     def play(self, notes, velocity=64, lapse=0):
-        print(notes)
+        """ Play an array of notes. Support sharp and bemol notation
+
+            Parameters:
+                notes (List):       ['C', 'A', ...]
+                velocity (int):     Volume (see `mido` specification)
+                lapse (int):        time between each note in array
+
+            Returns:
+                Sound (Midi Output)
+
+            Example:
+                ```python
+                sn = SoundNotes()
+                sn.play(sn.create_mode('lidio', 'A', 3), lapse=0.5)
+                ```
+        """
         for note in notes:
-            self.port.send(Message('note_on', note=self.m[note], time=lapse, velocity=64))
+            midinote = self.mapping_bemol[note] if 'b' in note else self.mapping_sharp[note]
+            print(note, midinote)
+            self.port.send(Message('note_on', note=midinote, time=lapse, velocity=64))
             if lapse:
                 time.sleep(lapse)
-
-# %%
-from scales import ScaleModes
-
-sm = ScaleModes()
-sn = SoundNotes()
-mode1 = sm.create_mode('jonico', 'F', 4)
-mode2 = sm.create_mode('lidio', 'F', 4)
-
-
-
-# %%

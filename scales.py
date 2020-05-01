@@ -3,13 +3,13 @@ from collections import defaultdict
 
 
 class ScaleModes:
+    """ Builds scales and scale modes
+
+    Parameters:
+    bemol (bool): Default False for scales in `#` way, True for scales in `b` way
+    """
 
     def __init__(self, bemol=False):
-        """ Builds scales and scale modes
-
-        Parameters:
-        bemol (bool): Default False for scales in `#` way, True for scales in `b` way
-        """
         self.bemol = bemol
         self.notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
         self.rules = [1, 1, 0, 1, 1, 1, 0]
@@ -17,8 +17,35 @@ class ScaleModes:
         self.modes = self._build_modes()
         self.scales = self._build_scales()
 
+    def _build_modes(self):
+        """ Build modes
+
+            Parameters:
+                None
+
+            Returns:
+                Dict: Mode as key and a List of 7 notes of the scale mode
+        """
+        mode_name = [
+            'jonico',        # major mode/natural major
+            'dorico',
+            'frigio',
+            'lidio',
+            'mixolidio',
+            'eolico',        # minor mode/natural minor
+            'locrio'
+        ]
+        return {mode_name[i]: self.rules[i:] + self.rules[:i] for i in range(7)}
+
     def _build_scales(self):
-        """ Private method: Build natural scales for each note """
+        """ Build natural scales for each note
+
+            Parameters:
+                None
+
+            Returns:
+                Dict: base note as key and a List of 12 notes of the scale
+        """
         scales = defaultdict(list)
         actual = []
         for i, key_note in enumerate(self.notes):
@@ -33,20 +60,6 @@ class ScaleModes:
                 else:
                     scales[key_note] += [note, note + '#'] if rule else [note]
         return scales
-
-    def _build_modes(self):
-        """ Private method: Create rules for each mode """
-        mode_name = [
-            'jonico',        # major mode/natural major
-            'dorico',
-            'frigio',
-            'lidio',
-            'mixolidio',
-            'eolico',        # minor mode/natural minor
-            'locrio'
-        ]
-        return {mode_name[i]: self.rules[i:] + self.rules[:i] for i in range(7)}
-
 
     def create_mode(self, mode, note, octave=None):
         """ Create mode with `b` if scale is minor else with `#`
