@@ -4,11 +4,12 @@ MIDI tests for music lessons
 Consider using a virtual env _midi_ and set `settings.json`
 
 # Usage
+
 <a name=".scales"></a>
-## scales
+## scales.py
 
 <a name=".scales.ScaleModes"></a>
-### ScaleModes
+### `ScaleModes` Class
 
 ```python
 sm = ScaleModes(bemol=False)
@@ -21,7 +22,7 @@ Builds scales and scale modes
 - `bemol` _bool_ - Default False for scales in `#` way, True for scales in `b` way
 
 <a name=".scales.ScaleModes.create_mode"></a>
-### create\_mode
+### `create\_mode` method
 
 ```python
 create_mode(mode, note, octave=None)
@@ -50,10 +51,10 @@ Create mode with `b` if scale is minor else with `#`
   ```
 
 <a name=".note_to_midi"></a>
-## note\_to\_midi
+## note_to_midi.py
 
 <a name=".note_to_midi.SoundNotes"></a>
-### SoundNotes
+### `SoundNotes` Class
 
 ```python
 sn = SoundNotes()
@@ -62,7 +63,7 @@ sn = SoundNotes()
 Play a list of notes
 
 <a name=".note_to_midi.SoundNotes.play"></a>
-#### play
+### `play` method
 
 ```python
 play(notes, velocity=64, lapse=0)
