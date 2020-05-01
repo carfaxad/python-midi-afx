@@ -1,4 +1,4 @@
-# Python MIDI afx
+# Python-MIDI-AFX
 Python MIDI utils for music lessons
 
 Consider using a virtual env _midi_ and set `settings.json`
