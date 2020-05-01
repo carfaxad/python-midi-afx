@@ -7,7 +7,7 @@ from mido.ports import BaseOutput
 from scales import ScaleModes
 
 
-class NoteToMidi(ScaleModes):
+class MappingMixin(ScaleModes):
 
     def __init__(self):
         super().__init__()
@@ -27,7 +27,7 @@ class NoteToMidi(ScaleModes):
 
         return mapping
 
-class SoundNotes(NoteToMidi):
+class PlayNotes(MappingMixin):
     """ Play a list of notes """
     def __init__(self):
         super().__init__()
@@ -47,8 +47,8 @@ class SoundNotes(NoteToMidi):
 
             Example:
                 ```python
-                sn = SoundNotes()
-                sn.play(sn.create_mode('lidio', 'A', 3), lapse=0.5)
+                p = PlayNotes()
+                p.play(p.create_mode('lidio', 'A', 3), lapse=0.5)
                 ```
         """
         for note in notes:

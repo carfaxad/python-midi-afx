@@ -53,16 +53,16 @@ Create mode with `b` if scale is minor else with `#`
 <a name=".note_to_midi"></a>
 ## note_to_midi.py
 
-<a name=".note_to_midi.SoundNotes"></a>
-### `SoundNotes` Class
+<a name=".note_to_midi.PlayNotes"></a>
+### `PlayNotes` Class
 
 ```python
-sn = SoundNotes()
+p = PlayNotes()
 ```
 
 Play a list of notes
 
-<a name=".note_to_midi.SoundNotes.play"></a>
+<a name=".note_to_midi.PlayNotes.play"></a>
 ### `play` method
 
 ```python
@@ -86,8 +86,8 @@ Play an array of notes. Support sharp and bemol notation
 **Examples**:
 
   ```python
-  sn = SoundNotes()
-  sn.play(sn.create_mode('lidio', 'A', 3), lapse=0.5)
+  p = PlayNotes()
+  p.play(p.create_mode('lidio', 'A', 3), lapse=0.5)
   ```
 
 # Thanks to
