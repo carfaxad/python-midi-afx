@@ -4,10 +4,10 @@ import time
 from mido import open_output
 from mido.messages import Message
 from mido.ports import BaseOutput
-from scales import ScaleModes
+from scales import MusicalBases
 
 
-class MappingMixin(ScaleModes):
+class MappingMixin(MusicalBases):
 
     def __init__(self):
         super().__init__()
@@ -34,13 +34,14 @@ class PlayNotes(MappingMixin):
         self.midiout = rtmidi.MidiOut()
         self.port = open_output(self.midiout.get_ports()[0])
 
-    def play(self, notes, velocity=64, lapse=0):
+    def play(self, notes, velocity=64, lapse=0, duration=0):
         """ Play an array of notes. Support sharp and bemol notation
 
             Parameters:
                 notes (List):       ['C', 'A', ...]
                 velocity (int):     Volume (see `mido` specification)
-                lapse (int):        time between each note in array
+                lapse (int):        Sequential: Time between each note in array to create sequential sound
+                duration (int):    Chords: Time at the end of sounding all notes in the array to create chord like sound
 
             Returns:
                 Sound (Midi Output)
@@ -57,3 +58,5 @@ class PlayNotes(MappingMixin):
             self.port.send(Message('note_on', note=midinote, time=lapse, velocity=64))
             if lapse:
                 time.sleep(lapse)
+        if not lapse and duration:
+            time.sleep(duration)

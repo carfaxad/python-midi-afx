@@ -1,9 +1,9 @@
 import json
 from collections import defaultdict
+from copy import deepcopy
 
-
-class ScaleModes:
-    """ Builds scales and scale modes
+class MusicalBases:
+    """ Builds scales, scale modes, chords, and more
 
     Parameters:
     bemol (bool): Default False for scales in `#` way, True for scales in `b` way
@@ -11,9 +11,11 @@ class ScaleModes:
 
     def __init__(self, bemol=False):
         self.bemol = bemol
+
         self.notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
-        self.rules = [1, 1, 0, 1, 1, 1, 0]
+        self.rules = [1, 1, 0, 1, 1, 1, 0]  # 1 = Tone, 0 = Semi
         self.base_rules = list(zip(self.rules, self.notes))
+
         self.modes = self._build_modes()
         self.scales = self._build_scales()
 
@@ -74,7 +76,7 @@ class ScaleModes:
 
             Example:
                 ```python
-                sm = ScaleModes(bemol=True)
+                sm = MusicalBases(bemol=True)
                 sm.create_mode('dorico', 'C', 3)
                 # returns: ['C3', 'D3', 'Eb3', 'F3', 'G3', 'A3', 'Bb3', 'C4']
                 ```
@@ -96,5 +98,88 @@ class ScaleModes:
                 continue
 
         print(self.modes[mode])
+        # TODO: Handle incremental octaves
         actual_mode = result if mode in ['jonico', 'lidio'] else _bemol(result)
-        return actual_mode + [note] if not octave else list(map(lambda x: f'{x}{octave}', actual_mode)) + [f'{note}{octave + 1}']
+        return actual_mode if not octave else list(map(lambda x: f'{x}{octave}', actual_mode))
+
+    def create_chord(self, scale, mode='major', octave=4, num_notes=3):
+        """ Create chord with given scale
+
+            Parameters:
+                scale (List):       ['C', 'E', ...]
+                mode (str):         major, minor, diminished, augmented
+                octave (int=4):     Octave in keyboard way
+                num_notes (int=3):          Number of containing notes
+
+            Returns:
+                List: Chord
+
+            Example:
+                ```python
+                mb = MusicalBases()
+                mb.create_chord(mb.scales['B'], num_notes=4, octave=3)
+                # returns: ['B3', 'D#3', 'F#3', 'A3']
+                ```
+
+        """
+
+        assert num_notes <= 7, 'Scales bigger than thirteenth are not supported yet'
+
+        names_by_position = [
+            'first',
+            'third',
+            'fifth',
+            'seventh',
+            'nineth',
+            'eleventh',
+            'thirteenth',
+        ]
+        rules = {
+            'major': [ # Fundamental
+                (4, 'third'),
+                (3, 'third minor'),
+                (3, 'third minor'),
+                (4, 'third'),
+                (3, 'third minor'),
+                (4, 'third')
+            ],
+            'minor': [
+                (3, 'third minor'),
+                (4, 'third'),
+                (3, 'third minor'),
+                (4, 'third'),
+                (3, 'third minor'),
+                (4, 'third')
+            ],
+            'diminished': [
+                (3, 'third minor'),
+                (3, 'third minor'),
+                (4, 'third'),
+                (4, 'third'),
+                (3, 'third minor'),
+                (4, 'third')
+            ],
+            'augmented': [
+                (4, 'third'),
+                (4, 'third'),
+                (2, 'third minor'),
+                (4, 'third'),
+                (3, 'third minor'),
+                (4, 'third')
+            ]
+        }
+
+        i = 0
+        j = 1
+        # TODO: Handle incremental octaves
+        dcs = list(map(lambda x: x + f'{octave}', scale)) + \
+              list(map(lambda x: x + f'{octave + 1}', scale))
+        actual = [dcs[i]]
+        study = [(dcs[i], 'fundamental', names_by_position[0])]
+        for step, tag in rules[mode][:num_notes - 1]:
+            i += step
+            study.append((dcs[i], tag, names_by_position[j]))
+            actual.append(dcs[i])
+            j += 1
+        print(study)
+        return actual
