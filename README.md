@@ -3,6 +3,13 @@ Python MIDI utils for music lessons
 
 Consider using a virtual env _midi_ and set `settings.json`
 
+- [Usage](#Usage)
+  * [Create modes](#.scales.MusicalBases.create_mode)
+  * [Create scales](#.scales.MusicalBases.create_chord)
+  * [Play notes](#.note_to_midi.PlayNotes.play)
+- [Final example](#finalexample)
+
+<a name=".Usage"></a>
 # Usage
 
 <a name=".scales"></a>
@@ -122,6 +129,7 @@ Play an array of notes. Support sharp and bemol notation
   p.play(p.create_mode('lidio', 'A', 3), lapse=0.5)
   ```
 
+<a name=".finalexample"></a>
 # Final example
 
 ```python
