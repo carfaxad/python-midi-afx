@@ -7,7 +7,7 @@ Consider using a virtual env _midi_ and set `settings.json`
   * [Create modes](#.scales.MusicalBases.create_mode)
   * [Create scales](#.scales.MusicalBases.create_chord)
   * [Play notes](#.note_to_midi.PlayNotes.play)
-- [Final example](#finalexample)
+- [Final example](#.finalexample)
 
 <a name=".Usage"></a>
 # Usage
