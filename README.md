@@ -69,7 +69,7 @@ Create chord with given scale
 **Arguments**:
 
 - `scale` _List_ - ['C', 'E', ...]
-- `mode` _str_ - major, minor, diminished, augmented
+- `mode` _str='major'_ - major, minor, diminished, augmented
 - `octave` _int=4_ - Octave in keyboard way
 - `num_notes` _int=3_ - Number of containing notes
 

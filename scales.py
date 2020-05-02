@@ -106,9 +106,9 @@ class MusicalBases:
         """ Create chord with given scale
 
             Parameters:
-                scale (List):       ['C', 'E', ...]
-                mode (str):         major, minor, diminished, augmented
-                octave (int=4):     Octave in keyboard way
+                scale (List):               ['C', 'E', ...]
+                mode (str='major'):         major, minor, diminished, augmented
+                octave (int=4):             Octave in keyboard way
                 num_notes (int=3):          Number of containing notes
 
             Returns:
