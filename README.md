@@ -19,7 +19,7 @@ Consider using a virtual env _midi_ and set `settings.json`
 ### `MusicalBases` Class
 
 ```python
-sm = MusicalBases(bemol=False)
+mb = MusicalBases(bemol=False)
 ```
 
 Builds scales, scale modes, chords, and more
@@ -27,6 +27,7 @@ Builds scales, scale modes, chords, and more
 **Arguments**:
 
 - `bemol` _bool_ - Default False for scales in `#` way, True for scales in `b` way
+- `fix_octaves` _bool_ - Preserve natural regular scales order if True.
 
 <a name=".scales.MusicalBases.create_mode"></a>
 ### `create\_mode` method
@@ -52,8 +53,8 @@ Create mode with `b` if scale is minor else with `#`
 **Examples**:
 
   ```python
-  sm = MusicalBases(bemol=True)
-  sm.create_mode('dorico', 'C', 3)
+  mb = MusicalBases(bemol=True)
+  mb.create_mode('dorico', 'C', 3)
   # returns: ['C3', 'D3', 'Eb3', 'F3', 'G3', 'A3', 'Bb3', 'C4']
   ```
 
@@ -142,15 +143,20 @@ p = PlayNotes()
 mb = MusicalBases()
 
 p.play(mb.create_chord(mb.create_mode('eolico', 'F'), num_notes=4, octave=3), lapse=0.4)
+
 p.play(mb.create_chord(mb.create_mode('eolico', 'A'), num_notes=3, octave=3), lapse=0.4)
 p.play(mb.create_chord(mb.create_mode('eolico', 'A'), num_notes=4, octave=3), duration=0.4)
+
 p.play(mb.create_chord(mb.create_mode('eolico', 'C'), num_notes=4, octave=4), lapse=0.4)
+
 p.play(mb.create_chord(mb.create_mode('eolico', 'D'), num_notes=3, octave=4), lapse=0.4)
 p.play(mb.create_chord(mb.create_mode('eolico', 'D'), num_notes=4, octave=4), duration=0.4)
+
 p.play(mb.create_chord(mb.create_mode('eolico', 'F'), num_notes=4, octave=3), duration=1.6)
 p.play(mb.create_chord(mb.create_mode('eolico', 'A'), num_notes=4, octave=3), duration=1.6)
 p.play(mb.create_chord(mb.create_mode('eolico', 'C'), num_notes=4, octave=4), duration=1.6)
-p.play(mb.create_chord(mb.create_mode('eolico', 'D'), num_notes=4, octave=4), duration=3.2)
+p.play(mb.create_chord(mb.create_mode('eolico', 'D'), num_notes=4, octave=4), duration=1.6)
+
 p.play(mb.create_chord(mb.create_mode('locrio', 'F'), num_notes=4, octave=3), lapse=0.2)
 p.play(mb.create_chord(mb.create_mode('locrio', 'F'), num_notes=3, octave=3), lapse=0.266)
 p.play(mb.create_chord(mb.create_mode('locrio', 'C'), num_notes=4, octave=4), lapse=0.2)
@@ -159,7 +165,36 @@ p.play(mb.create_chord(mb.create_mode('locrio', 'D'), num_notes=4, octave=4), la
 p.play(mb.create_chord(mb.create_mode('locrio', 'D'), num_notes=3, octave=4), lapse=0.266)
 p.play(mb.create_chord(mb.create_mode('locrio', 'A'), num_notes=4, octave=5), lapse=0.2)
 p.play(mb.create_chord(mb.create_mode('locrio', 'A'), num_notes=3, octave=5), lapse=0.266)
-sleep(3.6)
+
+p.play(mb.create_chord(mb.create_mode('jonico', 'F'), num_notes=4, octave=3), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('jonico', 'A'), num_notes=4, octave=3), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('jonico', 'C'), num_notes=4, octave=3), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('jonico', 'D'), num_notes=4, octave=3), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('mixolidio', 'F'), num_notes=4, octave=4), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('mixolidio', 'A'), num_notes=4, octave=4), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('mixolidio', 'C'), num_notes=4, octave=4), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('mixolidio', 'D'), num_notes=4, octave=4), lapse=0.2)
+
+mb.fix_octaves = False
+p.play(mb.create_chord(mb.create_mode('jonico', 'F'), num_notes=4, octave=3), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('jonico', 'A'), num_notes=4, octave=3), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('mixolidio', 'C'), num_notes=4, octave=4), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('mixolidio', 'D'), num_notes=4, octave=4), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('dorico', 'F'), num_notes=4, octave=4), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('dorico', 'A'), num_notes=4, octave=4), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('mixolidio', 'C'), num_notes=4, octave=4), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('mixolidio', 'D'), num_notes=4, octave=4), lapse=0.2)
+
+mb.fix_octaves = True
+p.play(mb.create_chord(mb.create_mode('jonico', 'F'), mode='augmented', num_notes=4, octave=4), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('jonico', 'F'), mode='major', num_notes=4, octave=4), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('jonico', 'F'), mode='minor', num_notes=4, octave=3), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('jonico', 'F'), mode='diminished', num_notes=4, octave=3), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('jonico', 'C'), mode='diminished', num_notes=4, octave=3), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('jonico', 'C'), mode='minor', num_notes=4, octave=3), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('jonico', 'A'), mode='augmented', num_notes=4, octave=4), lapse=0.2)
+p.play(mb.create_chord(mb.create_mode('jonico', 'D'), mode='major', num_notes=4, octave=4), lapse=0.2, duration=3.2)
+
 ```
 
 # Thanks to

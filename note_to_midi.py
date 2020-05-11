@@ -58,5 +58,5 @@ class PlayNotes(MappingMixin):
             self.port.send(Message('note_on', note=midinote, time=lapse, velocity=64))
             if lapse:
                 time.sleep(lapse)
-        if not lapse and duration:
-            time.sleep(duration)
+
+        time.sleep(duration)

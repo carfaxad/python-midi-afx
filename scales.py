@@ -7,10 +7,12 @@ class MusicalBases:
 
     Parameters:
     bemol (bool): Default False for scales in `#` way, True for scales in `b` way
+    fix_octaves (bool): Preserve natural regular scales order if True.
     """
 
-    def __init__(self, bemol=False):
-        self.bemol = bemol
+    def __init__(self):
+        self.bemol = False
+        self.fix_octaves = True
 
         self.notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
         self.rules = [1, 1, 0, 1, 1, 1, 0]  # 1 = Tone, 0 = Semi
@@ -18,6 +20,25 @@ class MusicalBases:
 
         self.modes = self._build_modes()
         self.scales = self._build_scales()
+
+    def _validate_note(self, note):
+        assert note in self.notes, 'Value of note does not exist'
+
+    def _set_octaves(self, m, octave):
+        if self.fix_octaves:
+            octave_m = []
+            for i, n in enumerate(m):
+                octave_m.append(f'{n}{octave}')
+                if ord(n[0]) == ord('B') and ord((m + m[:-1])[i + 1][0]) != ord('B'):
+                    octave += 1
+                # TODO
+                # elif ord(n[0]) > ord((m + m[:-1])[i + 1][0]):
+                #     octave += 1
+                else:
+                    continue
+            return octave_m
+        else:
+            return list(map(lambda x: f'{x}{octave}', m))
 
     def _build_modes(self):
         """ Build modes
@@ -76,12 +97,13 @@ class MusicalBases:
 
             Example:
                 ```python
-                sm = MusicalBases(bemol=True)
-                sm.create_mode('dorico', 'C', 3)
+                mb = MusicalBases(bemol=True)
+                mb.create_mode('dorico', 'C', 3)
                 # returns: ['C3', 'D3', 'Eb3', 'F3', 'G3', 'A3', 'Bb3', 'C4']
                 ```
 
         """
+        self._validate_note(note)
         scale = self.scales[note]
 
         def _bemol(r):
@@ -98,9 +120,8 @@ class MusicalBases:
                 continue
 
         print(self.modes[mode])
-        # TODO: Handle incremental octaves
         actual_mode = result if mode in ['jonico', 'lidio'] else _bemol(result)
-        return actual_mode if not octave else list(map(lambda x: f'{x}{octave}', actual_mode))
+        return actual_mode if not octave else self._set_octaves(actual_mode, octave)
 
     def create_chord(self, scale, mode='major', octave=4, num_notes=3):
         """ Create chord with given scale
@@ -122,7 +143,7 @@ class MusicalBases:
                 ```
 
         """
-
+        
         assert num_notes <= 7, 'Scales bigger than thirteenth are not supported yet'
 
         names_by_position = [
@@ -171,9 +192,7 @@ class MusicalBases:
 
         i = 0
         j = 1
-        # TODO: Handle incremental octaves
-        dcs = list(map(lambda x: x + f'{octave}', scale)) + \
-              list(map(lambda x: x + f'{octave + 1}', scale))
+        dcs = self._set_octaves(scale + scale, octave)
         actual = [dcs[i]]
         study = [(dcs[i], 'fundamental', names_by_position[0])]
         for step, tag in rules[mode][:num_notes - 1]:
@@ -181,5 +200,7 @@ class MusicalBases:
             study.append((dcs[i], tag, names_by_position[j]))
             actual.append(dcs[i])
             j += 1
+        print(dcs)
+        print(mode)
         print(study)
         return actual
